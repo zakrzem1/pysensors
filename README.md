@@ -112,8 +112,34 @@ To have launchd start grafana now and restart at login:
 Or, if you don't want/need a background service you can just run:
   grafana-server --config=/usr/local/etc/grafana/grafana.ini --homepath /usr/local/share/grafana cfg:default.paths.logs=/usr/local/var/log/grafana cfg:default.paths.data=/usr/local/var/lib/grafana cfg:default.paths.plugins=/usr/local/var/lib/grafana/plugins
 
-Deployment on raspberry pi (for automating one day)
+Deployment on raspberry pi
 ==========================
+
+Python and libraries
+--------------------
+
+    sudo apt-get update
+    sudo apt-get -y install build-essential python-pip python-dev python-smbus git
+    sudo pip install paho-mqtt pyhocon pytz
+    
+GPIO library
+------------
+
+    cd /tmp
+    git clone https://github.com/adafruit/Adafruit_Python_GPIO.git
+    cd Adafruit_Python_GPIO
+    sudo python setup.py install
+
+Temperature sensor library
+--------------------------
+
+    cd /tmp
+    git clone https://github.com/adafruit/Adafruit_Python_DHT.git
+    cd Adafruit_Python_DHT
+    sudo python setup.py install
+
+Pysensors module
+----------------
 
     cd /opt
     sudo git clone https://github.com/zakrzem1/pysensors.git
@@ -121,18 +147,5 @@ Deployment on raspberry pi (for automating one day)
     sudo chgrp -R pysensors pysensors
     sudo chmod -R g+w /opt/pysensors
     sudo adduser pi pysensors
-    sudo pip install paho-mqtt pyhocon pytz
-
-    sudo apt-get update
-    sudo apt-get -y install build-essential python-pip python-dev python-smbus git
-    cd /tmp
-    git clone https://github.com/adafruit/Adafruit_Python_GPIO.git
-    cd Adafruit_Python_GPIO
-    sudo python setup.py install
-
-    cd /tmp
-    git clone https://github.com/adafruit/Adafruit_Python_DHT.git
-    cd Adafruit_Python_DHT
-    sudo python setup.py install
 
     cd /opt/keep-good-atmosphere/src/pysensors/;nohup python pysensors.py >/tmp/pysensors.out &

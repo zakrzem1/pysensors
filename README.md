@@ -119,8 +119,8 @@ Python and libraries
 --------------------
 
     sudo apt-get update
-    sudo apt-get -y install build-essential python-pip python-dev python-smbus git
-    sudo pip install paho-mqtt pyhocon pytz
+    sudo apt-get -y install build-essential python-pip python-dev python-smbus git 
+    sudo pip install paho-mqtt pyhocon pytz pyserial
     
 GPIO library
 ------------

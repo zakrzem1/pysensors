@@ -3,8 +3,10 @@ from log import info,warning
 from config import conf
 mqtt_topic_resolution = conf['mqtt']['topic_resolution']
 mqtt_broker_host = conf['mqtt']['broker_host']
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
-def on_connect(client, userdata, rc):
+def on_connect(self, client, userdata, rc):
   info("Connected with result code " + str(rc) + " subscribing to " + mqtt_topic_resolution)
   subscribed = client.subscribe(mqtt_topic_resolution)
   info ('subscribed sucess = '+str(mqtt.MQTT_ERR_SUCCESS == subscribed[0])+' msgID: '+str(subscribed[1]))
@@ -24,6 +26,8 @@ def on_subscribe(mosq, obj, mid, granted_qos):
 
 def start_client():
     client = mqtt.Client()
+    logger = logging.getLogger(__name__)
+    client.enable_logger(logger)
     client.on_connect = on_connect
     client.on_message = on_message
     client.on_subscribe = on_subscribe

@@ -148,4 +148,4 @@ Pysensors module
     sudo chmod -R g+w /opt/pysensors
     sudo adduser pi pysensors
 
-    cd /opt/keep-good-atmosphere/src/pysensors/;nohup python pysensors.py >/tmp/pysensors.out &
+    cd /opt/pysensors;nohup python pysensors.py >/tmp/pysensors.out &

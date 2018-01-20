@@ -34,7 +34,6 @@ import json
 import pytz
 import dht_sensor as dht
 import onewire_temp_sensor as ow
-import airquality_sensor as aqs
 import airquality_sensor_serial as aqss
 import people as ppl
 import time
@@ -72,11 +71,6 @@ def main_loop():
                 info('reading dht sensor')
                 reading = dht.read(a.get('addr'))
                 publishableDoc = to_json(now, reading)
-            elif(a.get('type')=='air_quality'):
-                fromFile = a.get('fromFile')
-                info('reading air quality sensor')
-                reading = aqs.read(fromFile, output_fmt)
-                publishableDoc = airquality_to_json(reading)
             elif(a.get('type')=='air_quality_serial'):
                 if(not aqss.inited()):
                     serialDevice = a.get('serialDevice')

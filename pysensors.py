@@ -35,7 +35,6 @@ import pytz
 import dht_sensor as dht
 import onewire_temp_sensor as ow
 import airquality_sensor_serial as aqss
-import people as ppl
 import time
 import datetime
 from log import warning, info
@@ -81,9 +80,6 @@ def main_loop():
                     publishableDoc = airquality_to_json(reading)
                 else:
                     publishableDoc = None
-            elif(a.get('type')=='personCount'):
-                reading = ppl.read(roomName)
-                publishableDoc = personcount_to_json(now, reading)
             if not reading:
                 info('unsupported reading type')
                 continue
@@ -113,14 +109,6 @@ def airquality_to_json(reading):
         warning('invalid data format read from air quality sensor file')
         return
     jason = {'level':reading[1],'tstamp':reading[0], 'roomName':roomName}
-    info('airquality_to_json\n', json.dumps(jason))
-    return json.dumps(jason)
-
-def personcount_to_json(now, reading):
-    if(reading<0):
-        warning('invalid value read from person count')
-        return
-    jason = {'personCount':reading,'tstamp':now.strftime(output_fmt), 'roomName':roomName}
     info('airquality_to_json\n', json.dumps(jason))
     return json.dumps(jason)
 

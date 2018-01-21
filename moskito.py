@@ -7,9 +7,10 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 def on_connect(self, client, userdata, rc):
-  info("Connected with result code " + str(rc) + " subscribing to " + mqtt_topic_resolution)
-  subscribed = client.subscribe(mqtt_topic_resolution)
-  info ('subscribed sucess = '+str(mqtt.MQTT_ERR_SUCCESS == subscribed[0])+' msgID: '+str(subscribed[1]))
+  info("Connected with result code " + str(rc))
+  #+ " subscribing to " + mqtt_topic_resolution)
+  #subscribed = client.subscribe(mqtt_topic_resolution)
+  #info ('subscribed sucess = '+str(mqtt.MQTT_ERR_SUCCESS == subscribed[0])+' msgID: '+str(subscribed[1]))
 
 def on_message(client, userdata, msg):
   info(str(client) + str(userdata))
@@ -24,6 +25,10 @@ def on_message(client, userdata, msg):
 def on_subscribe(mosq, obj, mid, granted_qos):
   info("[on_subscribe] Subscribed: " + str(mid) + " " + str(granted_qos))
 
+def on_publish(mqttc, obj, mid):
+    print("published mid: " + str(mid))
+    pass
+
 def start_client():
     client = mqtt.Client()
     logger = logging.getLogger(__name__)
@@ -31,6 +36,7 @@ def start_client():
     client.on_connect = on_connect
     client.on_message = on_message
     client.on_subscribe = on_subscribe
+    client.on_publish = on_publish
     client.connect(mqtt_broker_host, 1883, 60)
     client.loop_start()
     return client

@@ -87,7 +87,7 @@ def main_loop():
             if not publishableDoc:
                 warning('skipping malformed reading')
                 continue
-            info('publishing to mqtt ', topic)
+            info('publishing ', publishableDoc, ' to mqtt ', topic)
             client.publish(topic, publishableDoc)
         if(i%10==0 and conf['gdocs']):
             print("GDOCS object:")

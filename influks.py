@@ -10,14 +10,18 @@ previous_point = {}
 
 def write(measurement, fields={}, tags={}):
     now = datetime.datetime.now(targetTz)
-    json_body = [
-            {
-                "measurement": measurement,
-                "tags": tags,
-                "time": now.strftime(outputFormat),
-                "fields": fields
-            }
-        ]
-    if(fields):
-        client.write_points(json_body)
-        previous_point = json_body[0]
+    current_point = {
+        "measurement": measurement,
+        "tags": tags,
+        "time": now.strftime(outputFormat),
+        "fields": fields
+    }    
+    if(not zero(current_point) and zero(previous_point)):
+        client.write_points([previous_point, current_point])
+    elif(not zero(current_point) and not zero(previous_point)):
+        client.write_points([current_point])
+    previous_point = current_point
+
+
+def zero(some_point):
+    return not some_point.fields.values().any()

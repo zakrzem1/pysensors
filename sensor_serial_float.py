@@ -18,7 +18,7 @@ def inited():
 	global ser
 	return ser and ser.is_open
 
-def read(outputFormat, targetTz):
+def read():
 	if(not inited()):
 		warning('Module not initied. Call init(...) first')
 		return None
@@ -29,8 +29,7 @@ def read(outputFormat, targetTz):
 			return None
 		contentStr = contentStr.strip()
 		content = float(contentStr)
-		now = datetime.datetime.now(targetTz)
-		return (now.strftime(outputFormat), content)
+		return content
 	except Exception as e:
 		warning('[sensor_serial_float] Error while reading line from ',initedSerialDevice, contentStr, e)
 		return None

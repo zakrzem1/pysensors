@@ -38,6 +38,7 @@ import airquality_sensor_serial as aqss
 import sensor_serial_float as ssf
 import time
 import datetime
+import influks
 from log import warning, info
 from config import conf
 try:
@@ -63,73 +64,67 @@ def main_loop():
         for a in sensors_cfg_arr:
             reading = ()
             publishableDoc = None
-            if(a.get('type')=='ow'):
+            readingType = a.get('type') 
+            if(readingType == 'ow'):
                 info('reading ow sensor')
                 reading = ow.read(a.get('addr'))
-                publishableDoc = to_json(now, reading)
-            elif(a.get('type')=='dht'):
+                publishableDoc = readingObj(now, reading)
+            elif(readingType == 'dht'):
                 info('reading dht sensor')
                 reading = dht.read(a.get('addr'))
-                publishableDoc = to_json(now, reading)
-            elif(a.get('type')=='air_quality_serial'):
+                publishableDoc = readingObj(now, reading)
+            elif(readingType == 'air_quality_serial'):
                 if(not aqss.inited()):
                     serialDevice = a.get('serialDevice')
                     aqss.init(serialDevice)
                 info('reading air quality sensor [serial]')
                 reading = aqss.read(output_fmt, targetTz)
                 if(reading):
-                    publishableDoc = airquality_to_json(reading)
+                    publishableDoc = airquality_readingObj(reading)
                 else:
                     publishableDoc = None
-            elif(a.get('type')=='serial_float'):
+            elif(readingType == 'serial_float'):
                 if(not ssf.inited()):
                     serialDevice = a.get('serialDevice')
                     ssf.init(serialDevice)
                 info('reading sensor [serial] float')
-                reading = ssf.read(output_fmt, targetTz)
+                publishableDoc = None
                 if(reading):
-                    publishableDoc = airquality_to_json(reading)
-                else:
-                    publishableDoc = None
-            if not reading:
-                info('unsupported reading type')
+                    publishableDoc = {'current':reading}
+            else:
+                info('unsupported reading type ', readingType)
                 continue
-            topic = a.get('topic')
-            if not publishableDoc:
+            if(not publishableDoc):
                 warning('skipping malformed reading')
                 continue
-            info('publishing ', publishableDoc, ' to mqtt ', topic)
-            client.publish(topic, publishableDoc)
+            topic = a.get('topic')
+            if(topic):
+                info('publishing ', publishableDoc, ' to mqtt ', topic)
+                client.publish(topic, json.dumps(publishableDoc))    
+            if(a.get('influx')):
+                influks.write('readings',publishableDoc)
+
         if(i%10==0 and conf['gdocs']):
-            print("GDOCS object:")
-            print(conf['gdocs'])
+            info("GDOCS object:", conf['gdocs'])
             gs.append_reading(reading)
         time.sleep(sensor_read_freq_secs)
 
-def to_json(now, reading):
+def readingObj(now, reading):
     if(not reading or len(reading)<1):
         warning('Invalid reading data. Expected at least temp')
         return None
-    jason = {'temp':reading[0],'tstamp':now.strftime(output_fmt), 'roomName':roomName}
+    obj = {'temp':reading[0],'tstamp':now.strftime(output_fmt), 'roomName':roomName}
     if len(reading)>1:
-        jason['hum'] = reading[1]
-    return json.dumps(jason)
+        obj['hum'] = reading[1]
+    return obj
 
-def airquality_to_json(reading):
+def airquality_readingObj(reading):
     if(len(reading)!=2):
         warning('invalid data format read from air quality sensor file')
         return
     jason = {'level':reading[1],'tstamp':reading[0], 'roomName':roomName}
-    info('airquality_to_json\n', json.dumps(jason))
-    return json.dumps(jason)
-
-def float_to_json(reading):
-    if(len(reading)!=2):
-        warning('invalid data format read from air quality sensor file')
-        return
-    jason = {'level':reading[1],'tstamp':reading[0], 'label':'dishwasher'}
-    info('float_to_json\n', json.dumps(jason))
-    return json.dumps(jason)
+    info('airquality_readingObj\n', json.dumps(jason))
+    return jason
 
 def main(argv=None):
     #info('Logging sensor measurements to {0} every {1} seconds.'.format(conf['gdocs']['doc_name'], conf['sensor_read_freq']))

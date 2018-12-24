@@ -3,7 +3,7 @@ from config import conf
 import pytz
 import datetime
 
-client = InfluxDBClient(host=conf['influx']['host'], port=8086, database=conf['influx']['dbname'], username:conf['influx']['username'], password:conf['influx']['password'])
+client = InfluxDBClient(host=conf['influx']['host'], port=8086, database=conf['influx']['dbname'], username=conf['influx']['username'], password=conf['influx']['password'])
 targetTz = pytz.timezone('UTC')
 output_fmt = '%Y-%m-%dT%H:%M:%SZ'
 previous_point = {}
@@ -13,7 +13,7 @@ def write(measurement, fields={}, tags={}):
     json_body = [
             {
                 "measurement": measurement,
-                "tags": tags
+                "tags": tags,
                 "time": now.strftime(outputFormat),
                 "fields": fields
             }

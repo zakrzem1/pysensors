@@ -22,8 +22,8 @@ conf['mqtt'] = {
 conf['sensors'] = configuration.get('sensors')
 
 conf['influx'] = {
-	"host": configuration.get_string('influx.host', '127.0.0.1')
-	"dbname": configuration.get_string('influx.dbname', 'readings')
-	"username": configuration.get_string('influx.username', '')
-	"password": configuration.get_string('influx.password', '')
+    "host": configuration.get_string('influx.host', '127.0.0.1'),
+    "dbname": configuration.get_string('influx.dbname', 'readings'),
+    "username": configuration.get_string('influx.username', ''),
+    "password": configuration.get_string('influx.password', '')
 }

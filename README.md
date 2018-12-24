@@ -20,6 +20,10 @@ For google docs connectivity, install:
 
     sudo pip install oauth2client gspread
 
+For direct time series upload, install influx db client lib:
+    
+    sudo pip install influxdb
+
 For DHT/1wire sensors support Install [Adafruit_Python_GPIO](https://github.com/adafruit/Adafruit_Python_GPIO)
 and [Adafruit Python DHT Sensor Library](https://github.com/adafruit/Adafruit_Python_DHT#adafruit-python-dht-sensor-library)
 

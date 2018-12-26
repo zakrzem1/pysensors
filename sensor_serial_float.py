@@ -25,7 +25,6 @@ def read():
 	contentStr = None
 	try:
 		contentStr = ser.readline()
-                info('line read', contentStr)
 		if(not contentStr):
 			return None
 		contentStr = contentStr.strip()

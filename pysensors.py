@@ -89,7 +89,6 @@ def main_loop():
                     ssf.init(serialDevice)
                 info('reading sensor [serial] float')
                 reading = ssf.read()
-                info(reading)
                 publishableDoc = {'current':reading}
                 info(publishableDoc)
             else:

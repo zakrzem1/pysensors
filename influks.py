@@ -9,13 +9,14 @@ output_fmt = '%Y-%m-%dT%H:%M:%SZ'
 previous_point = {}
 
 def write(measurement, fields={}, tags={}, outputFormat='%Y-%m-%dT%H:%M:%SZ'):
+    global previous_point
     now = datetime.datetime.now(targetTz)
     current_point = {
         "measurement": measurement,
         "tags": tags,
         "time": now.strftime(outputFormat),
         "fields": fields
-    }    
+    } 
     if(not zero(current_point) and zero(previous_point)):
         client.write_points([previous_point, current_point])
     elif(not zero(current_point) and not zero(previous_point)):

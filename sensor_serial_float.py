@@ -8,7 +8,7 @@ initedSerialDevice = None
 
 def init(serialDevice):
 	global ser 
-	ser = serial.Serial(serialDevice,9600,timeout=2)
+	ser = serial.Serial(serialDevice,115200,timeout=2)
 	if(not ser.is_open):
 		ser.open()
 	global initedSerialDevice
@@ -25,6 +25,7 @@ def read():
 	contentStr = None
 	try:
 		contentStr = ser.readline()
+                info('line read', contentStr)
 		if(not contentStr):
 			return None
 		contentStr = contentStr.strip()

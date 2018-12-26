@@ -88,16 +88,17 @@ def main_loop():
                     serialDevice = a.get('serialDevice')
                     ssf.init(serialDevice)
                 info('reading sensor [serial] float')
-                publishableDoc = None
-                if(reading):
-                    publishableDoc = {'current':reading}
+                reading = ssf.read()
+                info(reading)
+                publishableDoc = {'current':reading}
+                info(publishableDoc)
             else:
                 info('unsupported reading type ', readingType)
                 continue
             if(not publishableDoc):
                 warning('skipping malformed reading')
                 continue
-            topic = a.get('topic')
+            topic = a.get('topic','')
             if(topic):
                 info('publishing ', publishableDoc, ' to mqtt ', topic)
                 client.publish(topic, json.dumps(publishableDoc))    

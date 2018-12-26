@@ -8,7 +8,7 @@ targetTz = pytz.timezone('UTC')
 output_fmt = '%Y-%m-%dT%H:%M:%SZ'
 previous_point = {}
 
-def write(measurement, fields={}, tags={}):
+def write(measurement, fields={}, tags={}, outputFormat='%Y-%m-%dT%H:%M:%SZ'):
     now = datetime.datetime.now(targetTz)
     current_point = {
         "measurement": measurement,
@@ -24,4 +24,4 @@ def write(measurement, fields={}, tags={}):
 
 
 def zero(some_point):
-    return not some_point.fields.values().any()
+    return not any(some_point.get('fields',{}).values())

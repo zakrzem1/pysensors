@@ -39,6 +39,7 @@ import sensor_serial_float as ssf
 import time
 import datetime
 import influks
+import serial
 from log import warning, info
 from config import conf
 try:
@@ -57,10 +58,10 @@ roomName = conf['roomName']
 
 def main_loop():
     sensor_read_freq_secs = conf.get('sensor_read_freq_secs', 30)
-    serialDevice = a.get('serialDevice')
+    serialDevice = sensors_cfg_arr[0].get('serialDevice')
     sensorSerialFloatReader = None
     if(serialDevice):
-        sensorSerialFloatReader = SensorSerialFloatReader(serial.Serial(serialDevice, 115200, timeout=2))
+        sensorSerialFloatReader = ssf.SensorSerialFloatReader(serial.Serial(serialDevice, 115200, timeout=2))
     while True:
         global i
         i+=1

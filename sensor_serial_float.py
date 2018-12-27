@@ -1,35 +1,40 @@
 import datetime
 from log import warning, info
-import serial
 import time
+import threading
 
-ser = None
-initedSerialDevice = None
+class SensorSerialFloatReader:
+    def __init__(self, serialObj):
+        self.currentRead = 0.0
+        self.serialObj = serialObj
+        self.dorun = True
+        if(not self.serialObj.is_open):
+            self.serialObj.open()
+        self.t1 = threading.Thread(target=self.Task1)
+        self.t1.start()
 
-def init(serialDevice):
-	global ser 
-	ser = serial.Serial(serialDevice,115200,timeout=2)
-	if(not ser.is_open):
-		ser.open()
-	global initedSerialDevice
-	initedSerialDevice = serialDevice
+    def Task1(self):
+        i = 1
+        while self.dorun:
+            contentStr = None
+            try:
+                print(i)
+                contentStr = self.serialObj.readline()
+                print(contentStr)
+                if(not contentStr):
+                    continue
+                contentStr = contentStr.strip()
+                self.currentRead = float(contentStr)
+            except Exception as e:
+                warning('[sensor_serial_float] Error while reading line',
+                        contentStr, e)
+                self.currentRead = None
+                break
 
-def inited():
-	global ser
-	return ser and ser.is_open
+        self.serialObj.close()
 
-def read():
-	if(not inited()):
-		warning('Module not initied. Call init(...) first')
-		return None
-	contentStr = None
-	try:
-		contentStr = ser.readline()
-		if(not contentStr):
-			return None
-		contentStr = contentStr.strip()
-		content = float(contentStr)
-		return content
-	except Exception as e:
-		warning('[sensor_serial_float] Error while reading line from ',initedSerialDevice, contentStr, e)
-		return None
+    def read(self):
+        return self.currentRead
+
+    def stop():
+        self.dorun = False

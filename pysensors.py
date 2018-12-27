@@ -54,8 +54,13 @@ i=0
 #mqtt_topic_temp=conf['mqtt']['topic_temp']
 sensors_cfg_arr = conf['sensors']
 roomName = conf['roomName']
+
 def main_loop():
     sensor_read_freq_secs = conf.get('sensor_read_freq_secs', 30)
+    serialDevice = a.get('serialDevice')
+    sensorSerialFloatReader = None
+    if(serialDevice):
+        sensorSerialFloatReader = SensorSerialFloatReader(serial.Serial(serialDevice, 115200, timeout=2))
     while True:
         global i
         i+=1
@@ -84,11 +89,7 @@ def main_loop():
                 else:
                     publishableDoc = None
             elif(readingType == 'serial_float'):
-                if(not ssf.inited()):
-                    serialDevice = a.get('serialDevice')
-                    ssf.init(serialDevice)
-                info('reading sensor [serial] float')
-                reading = ssf.read()
+                reading = sensorSerialFloatReader.read()
                 publishableDoc = {'current':reading}
                 info(publishableDoc)
             else:

@@ -17,9 +17,9 @@ def write(measurement, fields={}, tags={}, outputFormat='%Y-%m-%dT%H:%M:%SZ'):
         "time": now.strftime(outputFormat),
         "fields": fields
     } 
-    if(not zero(current_point) and zero(previous_point)):
+    if(zero(previous_point) and not zero(current_point)):
         client.write_points([previous_point, current_point])
-    elif(not zero(current_point) and not zero(previous_point)):
+    elif(not zero(previous_point)):
         client.write_points([current_point])
     previous_point = current_point
 

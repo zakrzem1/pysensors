@@ -124,7 +124,7 @@ Python and libraries
 
     sudo apt-get update
     sudo apt-get -y install build-essential python-pip python-dev python-smbus git 
-    sudo pip install paho-mqtt pyhocon pytz pyserial
+    sudo pip install paho-mqtt pyhocon pytz pyserial influxdb
     
 GPIO library
 ------------
@@ -144,12 +144,17 @@ Temperature sensor library
 
 Pysensors module
 ----------------
+Add system user and group
+
+    sudo useradd -r -s /bin/false pysensors
+    sudo groupadd pysensors
+    sudo adduser pysensors pysensors
 
     cd /opt
-    sudo git clone https://github.com/zakrzem1/pysensors.git
-    sudo groupadd pysensors
+    sudo git clone https://github.com/zakrzem1/pysensors.git    
+    sudo chown -R pysensors pysensors
     sudo chgrp -R pysensors pysensors
     sudo chmod -R g+w /opt/pysensors
-    sudo adduser pi pysensors
+    
 
     cd /opt/pysensors;nohup python pysensors.py >/tmp/pysensors.out &

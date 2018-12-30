@@ -9,15 +9,17 @@
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
-dir="/home/pi/src/pysensors"
+dir="/opt/pysensors"
 #mza: should be e.g. /opt/pysensors
 cmd="python pysensors.py"
-user=""
+user="pysensors"
 
 name=`basename $0`
 pid_file="/var/run/$name.pid"
-stdout_log="/var/log/$name.log"
-stderr_log="/var/log/$name.err"
+#stdout_log="/var/log/$name.log"
+stdout_log="/media/freeagent/pysensors/$name.log"
+#stderr_log="/var/log/$name.err"
+stderr_log="/media/freeagent/pysensors/$name.err"
 
 get_pid() {
     cat "$pid_file"

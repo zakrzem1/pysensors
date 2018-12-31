@@ -7,7 +7,7 @@ client = InfluxDBClient(host=conf['influx']['host'], port=8086, database=conf['i
 targetTz = pytz.timezone('UTC')
 output_fmt = '%Y-%m-%dT%H:%M:%SZ'
 # initial previous point is to be identified as non zero in order for the below simple algorithm to ignore it
-previous_point = {"fields":0.0001}
+previous_point = {"fields":{"current":0.0001}}
 
 def write(measurement, fields={}, tags={}, outputFormat='%Y-%m-%dT%H:%M:%SZ'):
     global previous_point

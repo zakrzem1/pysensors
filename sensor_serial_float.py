@@ -14,14 +14,10 @@ class SensorSerialFloatReader:
         self.t1.start()
 
     def Task1(self):
-        i = 0
         while self.dorun:
-            i=i+1
             contentStr = None
             try:
-                print(i)
                 contentStr = self.serialObj.readline()
-                print(contentStr)
                 if(not contentStr):
                     continue
                 contentStr = contentStr.strip()
@@ -30,7 +26,6 @@ class SensorSerialFloatReader:
                 warning('[sensor_serial_float] Error while reading line',
                         contentStr, e)
                 self.currentRead = None
-
         self.serialObj.close()
 
     def read(self):

@@ -6,7 +6,8 @@ import datetime
 client = InfluxDBClient(host=conf['influx']['host'], port=8086, database=conf['influx']['dbname'], username=conf['influx']['username'], password=conf['influx']['password'])
 targetTz = pytz.timezone('UTC')
 output_fmt = '%Y-%m-%dT%H:%M:%SZ'
-previous_point = {}
+# initial previous point is to be identified as non zero in order for the below simple algorithm to ignore it
+previous_point = {"fields":0.0001}
 
 def write(measurement, fields={}, tags={}, outputFormat='%Y-%m-%dT%H:%M:%SZ'):
     global previous_point

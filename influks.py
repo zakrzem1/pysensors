@@ -26,4 +26,4 @@ def write(measurement, fields={}, tags={}, outputFormat='%Y-%m-%dT%H:%M:%SZ'):
 
 
 def zero(some_point):
-    return not any(some_point.get('fields',{}).values())
+    return not any(some_point.get("fields",{}).values())
